@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  {% if object.character_server %}
+    <div class="row col-lg-12">
+      <div class="col-lg-6">
+        <div class="container-div">
+          <h3 class="blue-text">
+            Информация
+          </h3>
+          <div class="profile-data">
+            {% if request.user.image %}
+              <img src="{{ object.image.url }}" alt="" class="img-fluid rounded-circle profile-image">
+            {% endif %}
+            <div class="profile-nickname">
+              <div class="stack" style="--stacks: 3;">
+                <span style="--index: 0;">{{ object.nickname }}</span>
+                <span style="--index: 1;">{{ object.nickname }}</span>
+                <span style="--index: 2;">{{ object.nickname }}</span>
+              </div>
+            </div>
+            <p>
+              <strong>Уровень:</strong> {{ object.character_level }}
+            </p>
+            <p>
+              <strong>Класс:</strong> {{ object.character_class }}
+            </p>
+            <p>
+              <strong>Рейтинг:</strong> {{ object.score }}
+            </p>
+            <p>
+              <strong>DKP:</strong> {{ object.character_points }}
+            </p>
+            <p>
+              <strong>КП:</strong> {{ object.character_party }}
+            </p>
+            <p>
+              <strong>Клан:</strong> {{ object.character_clan }}
+            </p>
+            <p>
+              <strong>Коллекций предметов:</strong> {{ object.character_item_collections }} / {{ total_item_collections }} ({{ item_collections_progress }}%)
+            </p>
+            <p>
+              <strong>Коллекций героев:</strong> {{ object.character_card_collections }} / {{ total_card_collections }} ({{ card_collections_progress }}%)
+            </p>
+            <p>
+              <strong>Коллекций агатионов:</strong> {{ object.character_agation_collections }} / {{ total_agation_collections }} {{ agation_collections_progress }}%
+            </p>
+            <p>
+              <strong>Коллекций печатей:</strong> {{ object.character_seal_collections }} / {{ total_seal_collections }} ({{ seal_collections_progress }}%)
+            </p>
+            <p>
+              <strong>Коллекций души:</strong> {{ object.character_soul_collections }} / {{ total_soul_collections }} ({{ soul_collections_progress }}%)
+            </p>
+            <p>
+              <strong>Пробуждений:</strong> {{ object.character_awaken_collections }} / {{ total_awaken_collections }} ({{ awaken_collections_progress }}%)
+            </p>
+          </div>
+        </div>
+        <div class="container-div">
+          <h3 class="blue-text">
+            Модерирование
+          </h3>
+          <div class="row">
+            <div class="col-lg-3">
+              <strong class="blue-text">DKP</strong>
+            </div>
+            <div class="col-lg-9">
+              <strong class="blue-text">Причина</strong>
+            </div>
+          </div> 
+          {% if moderator_list %}
+            {% for moderator in moderator_list %}
+              <div class="row col-lg-12">
+                <div class="col-lg-3">
+                  <span class="blue-text">{{ moderator.points }}</span>
+                </div>
+                <div class="col-lg-9">
+                  <span class="blue-text">{{ moderator.text }}</span>
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <span class="blue-text">Модераторы не вмешивались</span>
+          {% endif %}
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="container-div">
+          <h3 class="blue-text">
+            События
+          </h3>
+          {% if event_list %}
+            <div class="row">
+              <div class="col-lg-4">
+                <strong class="blue-text">Босс</strong>
+              </div>
+              <div class="col-lg-4">
+                <strong class="blue-text">DKP</strong>
+              </div>
+              <div class="col-lg-4">
+                <strong class="blue-text">Убит</strong>
+              </div>
+            </div>
+          {% for event in event_list %}
+              <a href="{{ event.get_absolute_url }}" class="event-link">
+                <div class="row event-row">
+                  <div class="col-lg-4 {{ event.boss.rarity }}">
+                      <span class="blue-text {{ event.boss.rarity }}">{{ event.boss.name }}</span>
+                  </div>
+                  {% if event.awakened %}
+                    <div class="col-lg-4">
+                        <span class="blue-text">+{% widthratio event.boss.points 1 10 %}</span>
+                    </div>
+                  {% else %}
+                    <div class="col-lg-4">
+                        <span class="blue-text">+{{ event.boss.points }}</span>
+                    </div>
+                  {% endif %}
+                    <div class="col-lg-4">
+                        <span class="blue-text">{{ event.killed_at }}</span>
+                    </div>
+                </div>
+              </a>
+          {% endfor %}
+        {% else %}
+          <div class="row row-event">
+            <div class="col-lg-12">
+                <span class="blue-text">Нет участий в событиях</span>
+            </div>
+          </div>
+        {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+{% endblock %}

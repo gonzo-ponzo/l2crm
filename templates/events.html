@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="row col-lg-12">
+        <div class="col-lg-7">
+            <div class="container-div">
+                <div class="row d-flex justify-content-between">
+                    <h3 class="blue-text">
+                        Убийства
+                    </h3>
+                    <a href="/events/create" class="link link-events">
+                        <button class="button mb-2">
+                            Создать
+                        </button>
+                    </a>
+                </div>
+                <div class="row col-lg-10">
+                    <div class="col-lg-3">
+                        <strong class="blue-text">Босс</strong>
+                    </div>
+                    <div class="col-lg-4">
+                        <strong class="blue-text">Убит</strong>
+                    </div>
+                    <div class="col-lg-4">
+                        <strong class="blue-text">Закрыт</strong>
+                    </div>
+                    <div class="col-lg-1">
+                    </div>
+                </div>
+                {% if event_list %}
+                    {% for event in event_list %}
+                        <div class="row col-lg-12 d-flex justify-content-between">
+                            <a href="{{ event.get_absolute_url }}" class="event-link col-lg-10">
+                                <div class="row event-row col-lg-12 pt-2 pb-2">
+                                    <div class="col-lg-3">
+                                        <span class="blue-text {{ event.boss.rarity }}">{{ event.boss.name }}</span>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <span class="blue-text">{{ event.killed_at }}</span>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <span class="blue-text">{{ event.closed_at }}</span>
+                                    </div>
+                                    <div class="col-lg-1">
+                                        {% if request.user in event.players.all %}
+                                            <p class="blue-text"><i class="bi bi-check-all"></i></p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </a>
+                            <div class="col-lg-2">
+                                {% if not object.was_respawned %}
+                                    {% if request.user not in event.players.all %}
+                                        <form method="post" class="event-invite" action="/events/{{ event.id }}/">
+                                            {% csrf_token %}
+                                            <button class="button" type="submit"><i class="bi bi-bell"></i>
+                                            </button>
+                                        </form>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <span class="blue-text">
+                        Убийств нет
+                    </span>
+                {% endif %}
+                <div class="row d-flex justify-content-around mt-2">
+                    <a href="/events/all" class="link link-events">
+                        <button class="button mb-2">
+                            Все
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="container-div">
+                <h3 class="blue-text mb-4">
+                    Возрождения
+                </h3>
+                <div class="row col-lg-12">
+                    <div class="col-lg-6">
+                        <strong class="blue-text">Босс</strong>
+                    </div>
+                    <div class="col-lg-6">
+                        <strong class="blue-text">Возродится</strong>
+                    </div>
+                </div>
+
+                {% if respawn_list %}
+                    {% for event in respawn_list %}
+                        <div class="row col-lg-12 d-flex justify-content-between">
+                            <div class="event-link col-lg-12">
+                                <div class="row event-row col-lg-12 pt-2 pb-2">
+                                    <div class="col-lg-6">
+                                        <span class="blue-text {{ event.boss.rarity }}">{{ event.boss.name }}</span>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <span class="blue-text">{{ event.respawn }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <span class="blue-text">
+                        Живые не восскрешаются
+                    </span>
+                {% endif %}
+                <div class="row d-flex justify-content-around mt-2">
+                    <a href="/events/respawns" class="link link-events">
+                        <button class="button mb-2">
+                            Все
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

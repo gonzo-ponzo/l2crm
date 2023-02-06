@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load paginator_tag %}
+
+{% block content %}
+    <div class="row col-lg-12">
+        <div class="col-lg-12 container-div">
+            <h3 class="blue-text">
+                Маркет
+            </h3>
+            <div class="row d-flex justify-content-between col-lg-12 mb-2">
+                <div class="col-lg 3 blue-text">
+                    Предмет
+                </div>
+                <div class="col-lg 3 blue-text">
+                    Тип
+                </div>
+                <div class="col-lg 3 blue-text">
+                    Стоимость
+                </div>
+                <div class="col-lg 2 blue-text">
+                    Участников
+                </div>
+                <div class="col-lg 1 blue-text">
+                </div>
+            </div>
+            {% if offers %}
+                {% for offer in offers %}
+                    <div class="row col-lg-12 d-flex justify-content-between">
+                        <a href="{{ offer.get_absolute_url }}" class="event-link col-lg-10">
+                            <div class="row event-row col-lg-12 pt-2 pb-2">
+                                <div class="col-lg-3">
+                                    <span class="blue-text {{ offer.item.rarity }}">{{ offer.item.name }}</span>
+                                </div>
+                                <div class="col-lg-3">
+                                    <span class="blue-text">{{ offer.item.type }}</span>
+                                </div>
+                                <div class="col-lg-3">
+                                    <span class="blue-text">{{ offer.item.price }}</span>
+                                </div>
+                                <div class="col-lg-2">
+                                    <span class="blue-text">{{ offer.players.count }}</span>
+                                </div>
+                                <div class="col-lg-1">
+                                    {% if request.user in offer.players.all %}
+                                        <p class="blue-text"><i class="bi bi-check-all"></i></p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </a>
+                        <div class="col-lg-2">
+                            {% if request.user not in offer.players.all %}
+                                <form method="post" action="/offers/{{ offer.id }}/">
+                                    {% csrf_token %}
+                                    <button class="button" type="submit"><i class="bi bi-currency-exchange"></i></i>
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <span class="blue-text">
+                    Нет предметов
+                </span>
+            {% endif %}
+            <div class="Pagination row justify-content-center">
+                <div class="Pagination-in row justofy-content-center mt-4">
+                    {% for page in paginator %}
+                        {% if page.number == page_obj.number %}
+                            <span class="pagination pagination-active"></span>
+                        {% else %}
+                            <a class="pagination" href="?{% url_replace 'page' page.number %}"></a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

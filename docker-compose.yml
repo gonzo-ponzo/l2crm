@@ -1,0 +1,59 @@
+version: '3.7'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    ports:
+      - "8000:8000"
+
+    entrypoint:
+      - ./entrypoint.sh
+    
+  postgresql:
+    image: postgres
+
+    environment:
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      POSTGRES_DB: $POSTGRES_DB
+      POSTGRES_PORT: $POSTGRES_PORT
+      POSTGRES_HOST: $POSTGRES_HOST
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  
+  redis_db:
+    image: redis:alpine
+
+    restart: always
+
+    volumes:
+      - redis_data:/data
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    
+    ports:
+      - "80:80"
+      - "443:443"
+
+    depends_on:
+      - web
+    volumes:
+      - static_volume:/etc/nginx/static
+      - ./nginx/certs:/etc/ssl/certs
+      
+
+
+volumes:
+  postgres_data:
+  redis_data:
+  static_volume:

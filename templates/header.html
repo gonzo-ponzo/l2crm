@@ -1,0 +1,70 @@
+{% load static %}
+
+<header class="header">
+  <div class="header-container d-flex justify-content-center row fixed-top shadow-lg">
+    <nav class="header-menu col-lg-12 ">
+      <ul class="d-flex justify-content-between">
+        {% if request.user.username %}
+          <!-- <li><a href="/home" class=""><i class="bi bi-house"></i>Главная</a></li>
+          <li><a href="/profile" class=""><i class="bi bi-person-fill"></i>Аккаунт</a></li>
+          <li><a href="/market" class=""><i class="bi bi-basket2-fill"></i>Маркет</a></li>
+          <li><a href="/events" class=""><i class="bi bi-calendar-event"></i>События</a></li>
+          <li><a href="/ratings" class=""><i class="bi bi-bar-chart-line"></i>Рейтинг</a></li>
+          <li><a href="/logout" class=""><i class="bi bi-door-open-fill"></i>Выйти</a></li> -->
+
+          <li>
+            <a href="/home" class="">
+              <button class="button">
+                <i class="bi bi-house"></i><strong>Главная</strong>
+              </button>
+            </a>
+          </li>
+          <li>
+            <a href="/profile" class="">
+              <button class="button">
+                <i class="bi bi-person-fill"></i><strong>Аккаунт</strong>
+              </button>
+            </a>
+          </li>
+          <li>
+            <a href="/market" class="">
+              <button class="button">
+                <i class="bi bi-basket2-fill"></i><strong>Маркет</strong>
+              </button>
+            </a>
+          </li>
+          <li>
+            <a href="/events" class="">
+              <button class="button">
+                <i class="bi bi-calendar-event"></i><strong>События</strong>
+              </button>
+            </a>
+          </li>
+          <li>
+            <a href="/ratings" class="">
+              <button class="button">
+                <i class="bi bi-bar-chart-line"></i><strong>Рейтинг</strong>
+              </button>
+            </a>
+          </li>
+          <li>
+            <a href="/logout" class="">
+              <button class="button">
+                <i class="bi bi-door-open-fill"></i><strong>Выйти</strong>
+              </button>
+            </a>
+          </li>
+        {% else %}
+          <!-- <li><a href="/discord-login/" class=""><i class="bi bi-door-open-fill"></i>Войти</a></li> -->
+          <li>
+            <a href="/discord-login/" class="">
+              <button class="button">
+                <i class="bi bi-door-open-fill"></i><strong>Войти</strong>
+              </button>
+            </a>
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
+  </div>
+</header>

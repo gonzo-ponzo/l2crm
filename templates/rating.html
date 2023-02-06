@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load paginator_tag %}
+
+
+{% block content %}
+
+    <div class="row col-lg-6">
+        <div class="col-lg-12 container-div">
+            <div class="row col-lg-12 justify-content-between">
+                <h3 class="blue-text">
+                    Рейтинг {{ server.name}}
+                </h3>
+                {% if page_obj.number == 1 %}
+                    <h3 class="blue-text"> 1 - 10</h3>
+                {% else %}
+                    <h3 class="blue-text">{{ page_obj.number|add:"-1" }}1 - {% widthratio page_obj.number 1 10 %} </h3>
+                {% endif %}
+            </div>
+            <div class="row col-lg-12 mb-3">
+                <div class="col-lg-4 blue-text">
+                    Место
+                </div>
+                <div class="col-lg-4 blue-text">
+                    Персонаж
+                </div>
+                <div class="col-lg-4 blue-text">
+                    Счет
+                </div>
+            </div>
+            {% for user in users_list %}
+                <a href="{{ user.get_absolute_url }}" class="event-link">
+                    <div class="row event-row col-lg-12">
+                        <div class="col-lg-4 blue-text">
+                            {{ forloop.counter }}
+                        </div>
+                        <div class="col-lg-4 blue-text">
+                            {{ user.nickname }}
+                        </div>
+                        <div class="col-lg-4 blue-text">
+                            {{ user.score }}
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+            <div class="Pagination row justify-content-center">
+                <div class="Pagination-in row justofy-content-center mt-4">
+                    {% for page in paginator %}
+                        {% if page.number == page_obj.number %}
+                            <span class="pagination pagination-active"></span>
+                        {% else %}
+                            <a class="pagination" href="?{% url_replace 'page' page.number %}"></a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

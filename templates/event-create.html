@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <div class="row col-lg-12 d-flex justify-content-around">
+    <div class="col-lg-7 container-div">
+      <h2 class="blue-text">
+        Создание события
+      </h2>
+      <form id="create-form" method="post" action="/events/create" data-drop-url="{% url 'ajax_load_drop' %}" novalidate>
+        {% csrf_token %}
+          <p>
+            <label for="event_boss" class="blue-text">Босс</label>
+            <select id="event_boss" class="label ui dropdown select-color" name="event_boss">
+              <option value=None selected="selected">Выберите Босса</option>
+              {% for boss in bosses %}
+                <option value={{ boss.id }}>{{ boss.name }}</option>
+              {% endfor %}
+            </select>
+          </p>
+          <div class="blue-text d-flex">
+            <div class="checkbox-wrapper ml-2 mb-2">
+              Пробужденный
+              <input type="checkbox" id="event_awakened" name="event_awakened" value=True>
+              <label for="event_awakened" class="toggle"><span></span></label>
+            </div>
+          </div>
+          <p>
+            <label for="event_killed_at_date" class="blue-text">Дата убийства</label>
+            <input id="event_killed_at_date" class="label ui" type="date" class="input" name="event_killed_at_date" value={{ date }} required>
+          </p>
+          <p>
+            <label for="event_killed_at_time" class="blue-text">Время убийства</label>
+            <input id="event_killed_at_time" class="label ui" type="time" class="input" name="event_killed_at_time" required>
+          </p>
+          <label class="blue-text">Дроп:</label>
+          <p class="mb-4">
+            <select id="event_drop" name="event_drop" multiple="multiple" class="label ui selection fluid dropdown">
+              {% for item in items %}
+                <option value="{{ item.id }}"><strong>{{ item }}</strong></option>
+              {% endfor %}          
+            </select>
+          </p>
+          <div class="blue-text d-flex">
+            <div class="checkbox-wrapper ml-2 mb-2">
+              Не был воскрешен
+              <input type="checkbox" id="event_was_respawned" name="event_was_respawned" value=True>
+              <label for="event_was_respawned" class="toggle"><span></span></label>
+            </div>
+          </div>
+          <div class="row button-row">
+            <button class="button" type="submit"><i class="bi bi-disc"></i><strong>Сохранить</strong></button>
+          </div>
+      </form>
+      <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+      <script>
+        $("#event_boss").change(function () {
+          var url = $("#create-form").attr("data-drop-url");
+          var bossId = $(this).val();
+
+          $.ajax({
+            url: url,
+            data: {
+              'boss': bossId
+            },
+            success: function (data) {
+              console.log(data);
+              $("#event_drop").html(data);
+            }
+          });
+
+        });
+      </script>
+  </div>
+{% endblock %}

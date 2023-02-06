@@ -1,0 +1,249 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+  <div class="row col-lg-12">
+    <form class="profile-form" method="post" action="/profile">
+      {% csrf_token %}
+      <div class="col-lg-12">
+        <div class="row d-flex justify-content-around">
+          <div class="col-lg-3 container-div">
+            <h3>
+              Персонаж
+            </h3>
+            <p class="profile-field">
+              <label for="character_nickname">Никнейм</label>
+              <input id="character_nickname" class="label ui" type="text" name="character_nickname" value={{ request.user.nickname }} required>
+            </p>
+            <p class="profile-field">
+              <label for="character_server">Сервер</label>
+              <select id="character_server" class="label ui dropdown select-color" name="character_server">
+                {% for server in servers %}
+                  <option value={{ server.id }} {% if server == request.user.character_server %} selected {% endif %}>{{ server.name }}</option>
+                {% endfor %}
+              </select>
+            </p>
+            <p class="profile-field">
+              <label for="character_game_class">Класс</label>
+              <select id="character_game_class" class="label ui dropdown select-color" name="character_game_class">
+                {% for game_class in game_classes %}
+                  <option value="{{ game_class.id }}" {% if game_class == request.user.character_class %} selected {% endif %}>{{ game_class.name }}</option>
+                {% endfor %}
+              </select>
+            </p>
+            <p class="profile-field">
+              <label for="character_clan">Клан</label>
+              <input id="character_clan" class="label ui" type="text" name="character_clan" value={{ request.user.character_clan }}>
+            </p>
+            <p class="profile-field">
+              <label for="character_party">КП</label>
+              <input id="character_party" type="text" class="label ui" name="character_party">
+            </p>
+            <p class="profile-field">
+              <label for="character_level">Уровень</label>
+              <input itemid="character_level" class="label ui" id="character_level" type="text" class="input" name="character_level" value={{ request.user.character_level }} required>
+            </p>
+
+            <label>Скиллы (добавьте имеющиеся):</label>
+            <div class="form-items">
+              <select name="character_skills" multiple="" class="label ui selection fluid dropdown">
+                {% for skill in skills %}
+                  <option value="{{ skill.id }}"><strong>{{ skill }}</strong></option>
+                {% endfor %}          
+              </select>
+            </div>
+          </div>
+          <div class="col-lg-3 container-div">
+            <h3>Коллекции</h3>
+            <p class="profile-field">
+              <label for="item_collection">Количество коллекций предметов</label>
+              <input id="item_collection" class="label ui" type="number" name="character_item_collections" value={{ request.user.character_item_collections }}>
+            </p>
+            <p class="profile-field">
+              <label for="card_collection">Количество коллекций героев</label>
+              <input id="card_collection" class="label ui" type="number" name="character_card_collections" value={{ request.user.character_card_collections }}>
+            </p>
+            <p class="profile-field">
+              <label for="agation_collection">Количество коллекций агатионов</label>
+              <input id="agation_collection" class="label ui" type="number" name="character_agation_collections" value={{ request.user.character_agation_collections }}>
+            </p>
+            <p class="profile-field">
+              <label for="seal_collection">Количество коллекций печати духов</label>
+              <input id="seal_collection" class="label ui" type="number" name="character_seal_collections" value={{ request.user.character_seal_collections }}>
+            </p>
+            <p class="profile-field">
+              <label for="soul_collection">Количество кристаллов души</label>
+              <input id="soul_collection" class="label ui" type="number" name="character_soul_collections" value={{ request.user.character_soul_collections }}>
+            </p>
+            <p class="profile-field">
+              <label for="awaken_collection">Количество пробуждений</label>
+              <input id="awaken_collection" class="label ui" type="number" name="character_awaken_collections" value={{ request.user.character_awaken_collections }}>
+            </p>
+          </div>
+          <div class="container-div col-lg-3">
+            <h3>Оружие/Броня</h3>
+            <div class="profile-field">
+              <datalist id="weapon">
+                {% for item in weapons_list %}
+                  <option>{{ item.name }}</option>
+                {% endfor %}
+              </datalist>
+              <label for="weapon">Оружие</label>
+              <input  autoComplete="on" class="label ui dropdown" list="weapon" name="weapon" {% if inventory.weapon %} value="{{ inventory.weapon.name }}" {% endif %}/> 
+            </div>
+            <div class="profile-field">
+              <datalist id="helmet">
+                {% for item in helmets_list %}
+                  <option>{{ item.name }}</option>
+                {% endfor %}
+              </datalist>
+              <label for="helmet">Голова</label>
+              <input  autoComplete="on" class="label ui dropdown" list="helmet" name="helmet" {% if inventory.helmet %} value="{{ inventory.helmet.name }}" {% endif %}/> 
+            </div>
+            <div class="profile-field">
+              <datalist id="chest">
+                {% for item in chests_list %}
+                  <option>{{ item.name }}</option>
+                {% endfor %}
+              </datalist>
+              <label for="chest">Верх</label>
+              <input  autoComplete="on" class="label ui dropdown" list="chest" name="chest" {% if inventory.chest %} value="{{ inventory.chest.name }}" {% endif %}/> 
+            </div>
+            <div class="profile-field">
+              <datalist id="legs">
+                {% for item in legs_list %}
+                  <option>{{ item.name }}</option>
+                {% endfor %}
+              </datalist>
+              <label for="legs">Низ</label>
+              <input  autoComplete="on" class="label ui dropdown" list="legs" name="legs" {% if inventory.legs %} value="{{ inventory.legs.name }}" {% endif %}/> 
+            </div>
+            <div class="profile-field">
+              <datalist id="gloves">
+                {% for item in gloves_list %}
+                  <option>{{ item.name }}</option>
+                {% endfor %}
+              </datalist>
+              <label for="gloves">Перчатки</label>
+              <input  autoComplete="on" class="label ui dropdown" list="gloves" name="gloves" {% if inventory.gloves %} value="{{ inventory.gloves.name }}" {% endif %}/> 
+            </div>
+            <div class="profile-field">
+              <datalist id="boots">
+                {% for item in boots_list %}
+                  <option>{{ item.name }}</option>
+                {% endfor %}
+              </datalist>
+              <label for="boots">Сапоги</label>
+              <input  autoComplete="on" class="label ui dropdown" list="boots" name="boots" {% if inventory.boots %} value="{{ inventory.boots.name }}" {% endif %}/> 
+            </div>
+            <div class="profile-field">
+              <datalist id="">
+                {% for item in cloacks_list %}
+                  <option>{{ item.name }}</option>
+                {% endfor %}
+              </datalist>
+              <label for="cloack">Плащ</label>
+              <input  autoComplete="on" class="label ui dropdown" list="cloack" name="cloack" {% if inventory.cloack %} value="{{ inventory.cloack.name }}" {% endif %}/> 
+            </div>
+            <div class="profile-field">
+              <datalist id="shirt">
+                {% for item in shirts_list %}
+                  <option>{{ item.name }}</option>
+                {% endfor %}
+              </datalist>
+              <label for="shirt">Рубашка</label>
+              <input  autoComplete="on" class="label ui dropdown" list="shirt" name="shirt" {% if inventory.shirt %} value="{{ inventory.shirt.name }}" {% endif %}/> 
+            </div>
+          </div>
+          <div class="container-div col-lg-3">
+            <h3>Аксесуары</h3>
+            <div class="profile-field">
+              <datalist id="sigil">
+                {% for item in sigils_list %}
+                  <option>{{ item.name }}</option>
+                {% endfor %}
+              </datalist>
+              <label for="sigil">Символ</label>
+              <input  autoComplete="on" class="label ui dropdown" list="sigil" name="sigil" {% if inventory.sigil %} value="{{ inventory.sigil.name }}" {% endif %}/> 
+            </div>
+  
+            <div class="profile-field">
+              <datalist id="neclace">
+                {% for item in neclaces_list %}
+                  <option>{{ item.name }}</option>
+                {% endfor %}
+              </datalist>
+              <label for="neclace">Ожерелье</label>
+              <input  autoComplete="on" class="label ui dropdown" list="neclace" name="neclace" {% if inventory.neclace %} value="{{ inventory.neclace.name }}" {% endif %}/> 
+            </div>
+  
+            <div class="profile-field">
+              <datalist id="ring1">
+                {% for item in rings_list %}
+                  <option>{{ item.name }}</option>
+                {% endfor %}
+              </datalist>
+              <label for="ring1">Кольцо 1</label>
+              <input  autoComplete="on" class="label ui dropdown" list="ring1" name="ring1" {% if inventory.ring1 %} value="{{ inventory.ring1.name }}" {% endif %}/> 
+            </div>
+  
+            <div class="profile-field">
+              <datalist id="ring2">
+                {% for item in rings_list %}
+                  <option>{{ item.name }}</option>
+                {% endfor %}
+              </datalist>
+              <label for="ring2">Кольцо 2</label>
+              <input  autoComplete="on" class="label ui dropdown" list="ring2" name="ring2" {% if inventory.ring2 %} value="{{ inventory.ring2.name }}" {% endif %}/> 
+            </div>
+  
+            <div class="profile-field">
+              <datalist id="earring1">
+                {% for item in earrings_list %}
+                  <option>{{ item.name }}</option>
+                {% endfor %}
+              </datalist>
+              <label for="earring1">Серьга 1</label>
+              <input  autoComplete="on" class="label ui dropdown" list="earring1" name="earring1" {% if inventory.earring1 %} value="{{ inventory.earring1.name }}" {% endif %}/> 
+            </div>
+  
+            <div class="profile-field">
+              <datalist id="earring2">
+                {% for item in earrings_list %}
+                  <option>{{ item.name }}</option>
+                {% endfor %}
+              </datalist>
+              <label for="earring2">Серьга 2</label>
+              <input  autoComplete="on" class="label ui dropdown" list="earring2" name="earring2" {% if inventory.earring2 %} value="{{ inventory.earring2.name }}" {% endif %}/> 
+            </div>
+  
+            <div class="profile-field">
+              <datalist id="belt">
+                {% for item in belts_list %}
+                  <option>{{ item.name }}</option>
+                {% endfor %}
+              </datalist>
+              <label for="belt">Пояс</label>
+              <input  autoComplete="on" class="label ui dropdown" list="belt" name="belt" {% if inventory.belt %} value="{{ inventory.belt.name }}" {% endif %}/> 
+            </div>
+  
+            <div class="profile-field">
+              <datalist id="bracer">
+                {% for item in bracers_list %}
+                  <option>{{ item.name }}</option>
+                {% endfor %}
+              </datalist>
+              <label for="bracer">Браслет</label>
+              <input  autoComplete="on" class="label ui dropdown" list="bracer" name="bracer" {% if inventory.bracer %} value="{{ inventory.bracer.name }}" {% endif %}/> 
+            </div>
+          </div>
+        </div>
+      </div>>
+      <div class="row button-row">
+        <button class="button" type="submit"><i class="bi bi-disc"></i><strong>Сохранить</strong></button>
+      </div>
+    </form>
+  </div>
+
+{% endblock %}

@@ -1,0 +1,7 @@
+{% block content %}
+    <select name="event_drop" multiple="" class="label ui selection fluid dropdown">
+        {% for item in items %}
+            <option value="{{ item.id }}"><strong>{{ item }}</strong></option>
+        {% endfor %}          
+    </select>
+{% endblock %}
