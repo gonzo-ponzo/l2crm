@@ -16,8 +16,12 @@ import os
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 
+
+env = Env()
+env.read_env()
+
 sentry_sdk.init(
-    dsn="https://78cfbffdffcb453d909f436121bb520c@o1231931.ingest.sentry.io/4504616260206592",
+    dsn=env.str("DSN"),
     integrations=[
         DjangoIntegration(),
     ],
@@ -34,8 +38,6 @@ sentry_sdk.init(
 ROOT_PATH = os.path.dirname(__file__)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-env = Env()
-env.read_env()
 
 POSTGRES_DB = env.str("POSTGRES_DB")
 POSTGRES_USER = env.str("POSTGRES_USER")
@@ -52,7 +54,7 @@ SECRET_KEY = env.str("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.str("DEBUG")
 
-ALLOWED_HOSTS = ["l2crm.ru", "www.l2crm.ru", "194.58.98.64"]
+ALLOWED_HOSTS = ["l2crm.ru", "www.l2crm.ru"]
 
 AUTHENTICATION_BACKENDS = ["discordlogin.auth.DiscordAuthenticationBackend"]
 

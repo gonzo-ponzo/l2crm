@@ -142,6 +142,7 @@ def new_event_page(request: HttpRequest):
         else:
             request.user.character_points += 20
         request.user.save()
+        # TODO webhook notification
         # embed = Embed(
         #     title=f"{boss.name} {server.name}",
         #     color=3064446,
