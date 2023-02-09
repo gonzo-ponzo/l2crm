@@ -31,7 +31,7 @@ SECRET_KEY = env.str("SECRET_KEY")
 
 DEBUG = env.str("DEBUG")
 
-ALLOWED_HOSTS = ["l2crm.ru", "www.l2crm.ru"]
+ALLOWED_HOSTS = env.str("ALLOWED_HOSTS").split(" ")
 
 AUTHENTICATION_BACKENDS = ["discordlogin.auth.DiscordAuthenticationBackend"]
 

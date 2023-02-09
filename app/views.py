@@ -5,7 +5,7 @@ from .models import Event, Item, Boss, Offer
 from django.views.generic import ListView, DetailView, UpdateView
 from django.views.decorators.csrf import csrf_protect
 import datetime
-from services import (
+from .services import (
     participation_in_event,
     create_new_event,
     get_boss_list_to_display,

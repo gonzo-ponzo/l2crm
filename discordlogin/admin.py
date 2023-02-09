@@ -48,6 +48,7 @@ class UserAdmin(UserAdmin):
         "character_server",
         "score",
     ]
+    list_filter = ["is_moderator", "character_server"]
     search_fields = ("nickname", "character_clan")
     filter_horizontal = []
     fieldsets = (

@@ -12,7 +12,7 @@ from app.models import Event
 from .models import Moderator, DiscordUser
 from django.views.generic import DetailView, ListView
 from typing import Any, Dict
-from services import (
+from .services import (
     get_user_inventory,
     set_user_data,
     create_new_report,
@@ -26,8 +26,8 @@ auth_url_discord = env.str("AUTH_URL_DISCORD")
 client_id = env.str("CLIENT_ID")
 client_secret = env.str("CLIENT_SECRET")
 guild_id = env.str("GUILD_ID")
+redirect_uri = env.str("REDIRECT_URI")
 API_ENDPOINT = "https://discord.com/api/v10"
-redirect_uri = "https://l2crm.ru/discord-login/redirect"
 
 
 def discord_login(request: HttpRequest) -> JsonResponse:
@@ -71,20 +71,20 @@ def exchange_code(code: str) -> dict:
     user = response.json()
 
     response = requests.get(
-        "https://discord.com/api/guilds/1061352170437480508/members/%s" % user["id"],
+        "https://discord.com/api/guilds/%s/members/%s" % (guild_id, user["id"]),
         headers={"Authorization": "Bot %s" % env.str("BOT_TOKEN")},
     )
     user_roles = response.json()["roles"]
 
     response = requests.get(
-        "https://discord.com/api/guilds/1061352170437480508/members?limit=1000",
+        "https://discord.com/api/guilds/%s/members?limit=1000" % guild_id,
         headers={"Authorization": "Bot %s" % env.str("BOT_TOKEN")},
     )
     members = response.json()
     member_ids = [member["user"]["id"] for member in members]
 
     response = requests.get(
-        "https://discord.com/api/guilds/1061352170437480508/roles",
+        "https://discord.com/api/guilds/%s/roles" % guild_id,
         headers={"Authorization": "Bot %s" % env.str("BOT_TOKEN")},
     )
     guild_roles = response.json()
