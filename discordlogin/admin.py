@@ -48,15 +48,10 @@ class UserAdmin(UserAdmin):
         "character_server",
         "score",
     ]
-    list_filter = [
-        "nickname",
-        "character_clan",
-        "character_server",
-    ]
     search_fields = ("nickname", "character_clan")
     filter_horizontal = []
     fieldsets = (
-        ("Discord", {"fields": ("discord_id", "username", "nickname")}),
+        ("Discord", {"fields": ("nickname",)}),
         (
             "Ingame",
             {

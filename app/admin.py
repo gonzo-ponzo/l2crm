@@ -20,10 +20,12 @@ class BossLootInLine(admin.TabularInline):
 
 @admin.register(Boss)
 class BossAdmin(admin.ModelAdmin):
-    list_display = ("name", "respawn_time", "get_killed_at", "will_respawn_at")
+    list_display = (
+        "name",
+        "respawn_time",
+    )
     list_display_links = ("name",)
     search_fields = ("name",)
-    list_filter = ("get_killed_at", "will_respawn_at")
     fields = (
         "name",
         "respawn_time",
@@ -31,8 +33,6 @@ class BossAdmin(admin.ModelAdmin):
         "respawn_delay",
         "points",
         "rarity",
-        "get_killed_at",
-        "will_respawn_at",
     )
     inlines = (BossLootInLine,)
 

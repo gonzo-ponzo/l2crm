@@ -34,12 +34,6 @@ ITEM_TYPES = (
 class Boss(models.Model):
     name = models.CharField(max_length=100, verbose_name="Имя")
     respawn_time = models.IntegerField(verbose_name="Время респа")
-    get_killed_at = models.DateTimeField(
-        blank=True, null=True, verbose_name="Время последнего убийства"
-    )
-    will_respawn_at = models.DateTimeField(
-        blank=True, null=True, verbose_name="Время следующего респа"
-    )
     loot = models.ManyToManyField(
         "Item", through="BossLoot", verbose_name="Список дропа"
     )
