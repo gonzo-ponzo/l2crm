@@ -1,21 +1,10 @@
 from environs import Env
 from pathlib import Path
 import os
-import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration
 
 
 env = Env()
 env.read_env()
-
-sentry_sdk.init(
-    dsn=env.str("DSN"),
-    integrations=[
-        DjangoIntegration(),
-    ],
-    traces_sample_rate=1.0,
-    send_default_pii=True,
-)
 
 ROOT_PATH = os.path.dirname(__file__)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

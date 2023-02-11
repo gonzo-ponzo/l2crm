@@ -131,3 +131,5 @@ debug.log
 nginx/certs/l2crm.crt
 nginx/certs/l2crm.key
 nginx/nginx.conf
+data.json
+todo.txt
