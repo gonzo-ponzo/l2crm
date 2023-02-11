@@ -34,6 +34,8 @@ INSTALLED_APPS = [
     "constance",
     "app",
     "discordlogin.apps.DiscordloginConfig",
+    "django_celery_beat",
+    "django_celery_results",
 ]
 
 MIDDLEWARE = [
@@ -145,3 +147,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 CSRF_TRUSTED_ORIGINS = ["https://l2crm.ru", "https://www.l2crm.ru"]
+
+CELERY_BROKER_URL = "redis://redis_db:6379"
+CELERY_RESULT_BACKEND = "django-db"
+CELERY_CACHE_BACKEND = "default"
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"

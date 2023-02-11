@@ -11,7 +11,7 @@ services:
 
     entrypoint:
       - ./entrypoint.sh
-    
+
   postgresql:
     image: postgres
 
@@ -50,8 +50,34 @@ services:
     volumes:
       - static_volume:/etc/nginx/static
       - ./nginx/certs:/etc/ssl/certs
-      
+  
+  worker:
+    restart: always
 
+    build:
+      context: .
+
+    volumes:
+      - .:/l2crm/
+
+    depends_on:
+      - postgresql
+      - redis_db
+      - web
+
+    command: celery -A l2crm worker -l info
+
+  beat:
+    restart: always
+    build:
+      context: .
+    command: celery -A l2crm beat -l info -S django
+    volumes:
+      - .:/l2crm/
+    depends_on:
+      - postgresql
+      - redis_db
+      - web
 
 volumes:
   postgres_data:

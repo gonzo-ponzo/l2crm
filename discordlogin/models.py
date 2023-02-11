@@ -106,7 +106,10 @@ class DiscordUser(models.Model):
     is_moderator = models.BooleanField(default=False, verbose_name="Модератор")
 
     def __str__(self):
-        return self.nickname
+        if self.nickname:
+            return self.nickname
+        else:
+            return self.username
 
     @property
     def is_staff(self):

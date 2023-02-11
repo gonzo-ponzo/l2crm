@@ -4,6 +4,7 @@ from discordlogin.models import DiscordUser, Moderator
 import datetime
 from django.utils import timezone
 from environs import Env
+from .tasks import update_event_respawn
 
 
 env = Env()
@@ -43,6 +44,9 @@ def create_new_event(request: HttpRequest) -> None:
         request.POST.get("event_killed_at_time"), "%H:%M"
     ).time()
     killed_at = datetime.datetime.combine(date, time)
+    respawn = killed_at + datetime.timedelta(
+            minutes=Boss.objects.get(id=request.POST.get("event_boss")).respawn_time
+        )
     flag = True if request.POST.get("event_awakened") == "True" else False
     boss = Boss.objects.get(id=request.POST.get("event_boss"))
     server = request.user.character_server
@@ -57,10 +61,7 @@ def create_new_event(request: HttpRequest) -> None:
         creator=request.user.nickname,
         killed_at=killed_at,
         closed_at=killed_at + datetime.timedelta(hours=2),
-        respawn=killed_at
-        + datetime.timedelta(
-            minutes=Boss.objects.get(id=request.POST.get("event_boss")).respawn_time
-        ),
+        respawn=respawn,
     )
     instance.save()
 
@@ -79,6 +80,9 @@ def create_new_event(request: HttpRequest) -> None:
     else:
         request.user.character_points += 20
     request.user.save()
+    time_before = respawn - datetime.datetime.now()
+    minutes_before = int(time_before.total_seconds() // 60)
+    update_event_respawn.apply_async((boss.id, server.id), countdown=60*15 + minutes_before)
 
     # TODO webhook notification
     # embed = Embed(
