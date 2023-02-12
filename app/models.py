@@ -129,9 +129,7 @@ class Event(models.Model):
     killed_at = models.DateTimeField(
         blank=True, null=True, verbose_name="Время убийства"
     )
-    closed_at = models.DateTimeField(
-        blank=True, null=True, verbose_name="Время закрытия"
-    )
+    was_closed = models.BooleanField(default=False, verbose_name="Закрыто")
     respawn = models.DateTimeField(blank=True, null=True, verbose_name="Время респа")
     was_respawned = models.BooleanField(default=False, verbose_name="Не воскрешен")
     was_reseted = models.BooleanField(

@@ -79,7 +79,8 @@ class EventAdmin(admin.ModelAdmin):
         "boss",
         "server",
         "killed_at",
-        "closed_at",
+        "was_closed",
+        "respawn",
     )
     search_fields = ("boss",)
     fields = (
@@ -89,7 +90,8 @@ class EventAdmin(admin.ModelAdmin):
         "clan",
         "creator",
         "killed_at",
-        "closed_at",
+        "respawn",
+        "was_closed",
         "was_respawned",
     )
     inlines = (EventLootInLine, EventPlayersInLine)

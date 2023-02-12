@@ -17,60 +17,73 @@
                         <p class="blue-text">Автор события: {{object.creator}} ( +20 DKP )</p>
                         <p class="blue-text">Убивший клан: {{ object.clan }}</p>
                         <p class="blue-text">Время убийства: {{ object.killed_at }}</p>
-                        <p class="blue-text">Время закрытия: {{ object.closed_at }}</p>
+                        <p class="blue-text">Статус:
+                            {% if object.was_closed %}
+                                Закрыто
+                            {% else %}
+                                Открыто
+                            {% endif %}
+                        </p>
                     {% endif %}
                 </div>
-                {% if not object.was_respawned %}
-                    <div class="col-lg-2 mx-auto">
+                <div class="col-lg-2 mx-auto">
+                    {% if not object.was_closed %}
                         {% if request.user not in object.players.all %}
-                            {% if invite %}
-                                <form method="post" action="/events/{{ object.id }}/">
-                                    {% csrf_token %}
-                                    <button class="button" type="submit">Отметиться
-                                    </button>
-                                </form>
-                            {% else %}
-                                <p class="blue-text">Событие закрыто</p>
-                            {% endif %}
+                            <form method="post" action="/events/{{ object.id }}/">
+                                {% csrf_token %}
+                                <button class="button" type="submit">Отметиться
+                                </button>
+                            </form>
                         {% else %}
                             <p class="blue-text">Вы уже отмечены</p>
                         {% endif %}
-                    </div>
-                {% endif %}
+                    {% else %}
+                        <p class="blue-text">Событие закрыто</p>
+                    {% endif %}
+                </div>
             </div>
             <div class="row">
-                {% if not object.was_respawned %}
-                    <div class="col-lg-6">
-                        {% if event.awakened %}
-                            <span class="blue-text">Участники ( +{% widthratio event.boss.points 1 10 %} ) DKP:</span>
-                        {% else %}
-                            <p class="blue-text">Участники ( +{{ object.boss.points }} DKP ):</p>
-                        {% endif %}
-                        <ul class="row col-lg-12">
-                            {% for member in object.players.all %}
-                                <div class="row col-lg-12">
-                                    <li class="blue-text col-lg-6">{{ member.nickname }}</li>
-                                    {% if request.user.is_moderator %}
+                <div class="col-lg-6">
+                    {% if event.awakened %}
+                        <span class="blue-text">Участники ( +{% widthratio event.boss.points 1 10 %} ) DKP:</span>
+                    {% else %}
+                        <p class="blue-text">Участники ( +{{ object.boss.points }} DKP ):</p>
+                    {% endif %}
+                    <ul class="row col-lg-12">
+                        {% for member in object.players.all %}
+                            <div class="row col-lg-12">
+                                <li class="blue-text col-lg-6">{{ member.nickname }}</li>
+                                {% if not object.was_closed %}
+                                    {% if member == request.user %}
                                         <form method="post" action="/events/{{ object.id }}/">
                                             <input id="event_player" class="hide" type="text" name="event_player" value={{ member.id }} required>
                                             {% csrf_token %}
                                             <button class="button button-small col-lg-6" type="submit">-
                                             </button>
                                         </form>
+                                    {% else %}
+                                        {% if request.user.is_moderator %}
+                                            <form method="post" action="/events/{{ object.id }}/">
+                                                <input id="event_player" class="hide" type="text" name="event_player" value={{ member.id }} required>
+                                                {% csrf_token %}
+                                                <button class="button button-small col-lg-6" type="submit">-
+                                                </button>
+                                            </form>
+                                        {% endif %}
                                     {% endif %}
-                                </div>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                    <div class="col-lg-6">
-                        <p class="blue-text">Список дропа:</p>
-                        <ul>
-                            {% for item in object.drop.all %}
-                                <li class="blue-text"><span class="{{ item.rarity }}">{{ item.name }}</span> | {{ item.type }} | {{ item.price }} DKP</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                {% endif %}
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="col-lg-6">
+                    <p class="blue-text">Список дропа:</p>
+                    <ul>
+                        {% for item in object.drop.all %}
+                            <li class="blue-text"><span class="{{ item.rarity }}">{{ item.name }}</span> | {{ item.type }} | {{ item.price }} DKP</li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
         </div>
     </div>

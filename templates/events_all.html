@@ -45,7 +45,13 @@
                                     <span class="blue-text">{{ event.killed_at }}</span>
                                 </div>
                                 <div class="col-lg-2">
-                                    <span class="blue-text">{{ event.closed_at }}</span>
+                                    <span class="blue-text">
+                                        {% if event.was_closed %}
+                                            Закрыто
+                                        {% else %}
+                                            Открыто
+                                        {% endif %}
+                                    </span>
                                 </div>
                                 <div class="col-lg-1">
                                     {% if request.user in event.players.all %}
@@ -55,7 +61,7 @@
                             </div>
                         </a>
                         <div class="col-lg-2">
-                            {% if not object.was_respawned %}
+                            {% if not event.was_closed %}
                                 {% if request.user not in event.players.all %}
                                     <form method="post" class="event-invite" action="/events/{{ event.id }}/">
                                         {% csrf_token %}

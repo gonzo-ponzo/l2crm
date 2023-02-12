@@ -30,11 +30,11 @@ input[type=number] {
     line-height: 50px;
     font-size: 20px;
     font-family: 'Bebas Neue', sans-serif;
-    background: linear-gradient(45deg, transparent 5%, #FF013C 5%);
+    background: linear-gradient(45deg, transparent 5%, #0B154B 5%);
     border: 0;
-    color: rgba(43, 192, 200, 1);
+    color: rgba(192, 230, 11);
     letter-spacing: 3px;
-    box-shadow: 6px 0px 0px #00E6F6;
+    box-shadow: 6px 0px 0px #959908;
     outline: transparent;
     position: relative;
     user-select: none;
@@ -526,6 +526,7 @@ body {
 .button-reset {
     position: absolute;
     right: 0;
+    top: -40px;
 }
 
 .button-moder {
@@ -593,7 +594,7 @@ body {
     align-items: center;
     outline: 2px solid #121233;
     border-radius: 20px;
-    font-size: 20px;
+    font-size: 16px;
     background-color: #4973a7;
 }
 
@@ -622,7 +623,7 @@ body {
 
 .event-invite .button,
 .event-invite .button:after {
-    height: 50px;
+    height: 45px;
     width: 75px;
     margin-left: auto;
 }

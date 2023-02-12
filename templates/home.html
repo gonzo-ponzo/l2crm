@@ -12,11 +12,27 @@
           <div class="profile-data">
             {% if request.user.is_moderator %}
               <div class="button-reset">
-                <a href="/reset-all-bosses" class="">
-                  <button class="button">
+                <form id="create-form" method="post" action="/home">
+                  {% csrf_token %}
+                    <p>
+                      <label for="reset_date" class="blue-text">Дата Сброса</label>
+                      <input id="reset_date" class="label ui" type="date" class="input" name="reset_date" value={{ date }} required>
+                    </p>
+                    <p>
+                      <label for="reset_time" class="blue-text">Время Сброса</label>
+                      <input id="reset_time" class="label ui" type="time" class="input" name="reset_time" required>
+                    </p>
+                    <div class="row button-row">
+                      <button class="button" type="submit">
+                        <i class="bi bi-arrow-clockwise"></i><strong>Обнуление</strong>
+                      </button>
+                    </div>
+                </form>
+                {% comment %} <a href="/reset-all-bosses" class="">
+                  <button class="button" type="submit">
                     <i class="bi bi-arrow-clockwise"></i><strong>Обнуление</strong>
                   </button>
-                </a>
+                </a> {% endcomment %}
               </div>
               <div class="button-moder">
                 <a href="/moderators" class="">
