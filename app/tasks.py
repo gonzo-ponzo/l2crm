@@ -13,7 +13,7 @@ def update_event_respawn(boss: int, server: int):
     last_event = (
         Event.objects.filter(boss=boss, server=server).order_by("-respawn").first()
     )
-    respawn = now - timedelta(minutes=5) + timedelta(minutes=boss.respawn_time)
+    respawn = now - timedelta(minutes=15) + timedelta(minutes=boss.respawn_time)
 
     if last_event.respawn < now:
         instance = Event(
@@ -22,7 +22,7 @@ def update_event_respawn(boss: int, server: int):
             creator="system",
             server=server,
             awakened=False,
-            killed_at=now - timedelta(minutes=5),
+            killed_at=now - timedelta(minutes=15),
             respawn=respawn,
             was_closed=True,
             was_respawned=True,
@@ -33,7 +33,7 @@ def update_event_respawn(boss: int, server: int):
         time_before = respawn - now
         seconds_before = int(time_before.total_seconds())
         update_event_respawn.apply_async(
-            (boss.id, server.id), countdown=60 * 5 + seconds_before
+            (boss.id, server.id), countdown=60 * 15 + seconds_before
         )
         return "%s True" % boss.name
     return False
