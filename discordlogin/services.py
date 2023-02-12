@@ -1,8 +1,10 @@
 from .models import CharacterClass, CharacterServer, DiscordUser, Moderator
 from app.models import Item, SkillCard, Event, Boss
 from django.http import HttpRequest
+from django.utils import timezone
 from constance import config
-import datetime
+from datetime import datetime, timedelta
+from app.tasks import update_event_respawn
 
 field_names = {
     "weapon": "Оружие",
@@ -169,20 +171,22 @@ def create_new_report(request: HttpRequest):
     player.save()
 
 
-def restart_bosses() -> None:
+def restart_bosses(reset_time: datetime) -> None:
+    from l2crm.celery import app
+
+    app.control.purge()
     respawns = (
-        Event.objects.filter(respawn__gt=datetime.datetime.now())
-        .exclude(respawn=None)
-        .all()
+        Event.objects.filter(respawn__gt=datetime.now()).exclude(respawn=None).all()
     )
     for respawn in respawns:
-        respawn.respawn = datetime.datetime.now()
-        respawn.closed_at = datetime.datetime.now() - datetime.timedelta(minutes=120)
+        respawn.respawn = reset_time
+        respawn.was_closed = True
         respawn.save()
     bosses = Boss.objects.filter(respawn_delay__gt=0).all()
     servers = CharacterServer.objects.all()
     for server in servers:
         for boss in bosses:
+            respawn = reset_time + timedelta(minutes=boss.respawn_delay)
             instance = Event(
                 boss=boss,
                 awakened=False,
@@ -191,9 +195,13 @@ def restart_bosses() -> None:
                 clan="system",
                 server=server,
                 creator="system",
-                killed_at=datetime.datetime.now(),
-                closed_at=datetime.datetime.now(),
-                respawn=datetime.datetime.now()
-                + datetime.timedelta(minutes=boss.respawn_delay),
+                killed_at=reset_time,
+                was_closed=True,
+                respawn=reset_time + timedelta(minutes=boss.respawn_delay),
             )
             instance.save()
+            time_before = respawn - datetime.now()
+            seconds_before = int(time_before.total_seconds())
+            update_event_respawn.apply_async(
+                (boss.id, server.id), countdown=60 * 15 + seconds_before
+            )

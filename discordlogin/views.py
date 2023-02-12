@@ -100,9 +100,21 @@ def exchange_code(code: str) -> dict:
 @login_required(login_url="/")
 @csrf_protect
 def home_page(request: HttpRequest):
+    import datetime
+
     user = request.user
     if not user.character_server:
         return redirect("/profile")
+
+    if request.method == "POST":
+        date = datetime.datetime.strptime(
+            request.POST.get("reset_date"), "%Y-%m-%d"
+        ).date()
+        time = datetime.datetime.strptime(
+            request.POST.get("reset_time"), "%H:%M"
+        ).time()
+        reset_at = datetime.datetime.combine(date, time)
+        restart_bosses(reset_at)
 
     return render(
         request,
@@ -273,10 +285,3 @@ def moderators(request: HttpRequest):
     return render(
         request, "moderators.html", context={"players": DiscordUser.objects.all()}
     )
-
-
-@login_required(login_url="/")
-@csrf_protect
-def reset_all_bosses(request: HttpRequest):
-    restart_bosses()
-    return redirect("/home")

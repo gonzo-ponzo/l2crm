@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Event, Item, Boss, Offer
 from django.views.generic import ListView, DetailView, UpdateView
 from django.views.decorators.csrf import csrf_protect
+from django.utils import timezone
 import datetime
 from .services import (
     participation_in_event,
@@ -53,14 +54,13 @@ class EventView(DetailView):
         from django.utils import timezone
 
         context = super(EventView, self).get_context_data(**kwargs)
-        now = timezone.now()
-        invite = self.object.closed_at > now
+        invite = not self.object.was_closed
         context["invite"] = invite
         return context
 
     def post(self, request: HttpRequest, *args, **kwargs):
         participation_in_event(request, self.get_object())
-        return redirect(f"/events/{self.object.id}")
+        return redirect(f"/events/{self.get_object().id}")
 
 
 @login_required(login_url="/")
@@ -74,7 +74,7 @@ def new_event_page(request: HttpRequest):
         create_new_event(request)
         return redirect("/events")
 
-    boss_list = get_boss_list_to_display()
+    boss_list = get_boss_list_to_display(user.character_server)
 
     return render(
         request,
@@ -120,7 +120,7 @@ def events_page(request: HttpRequest):
                 was_reseted=False,
             ).all()[0:9],
             "respawn_list": Event.objects.filter(
-                respawn__gt=datetime.datetime.now(),
+                respawn__gt=timezone.now(),
                 server=request.user.character_server,
             )
             .exclude(respawn=None)

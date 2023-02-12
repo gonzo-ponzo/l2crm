@@ -8,7 +8,6 @@ from discordlogin.views import (
     UserView,
     RatingView,
     moderators,
-    reset_all_bosses,
 )
 from app.views import (
     EventListView,
@@ -31,7 +30,6 @@ urlpatterns = [
     path("", welcome_page, name="welcome-page"),
     path("discord-login/", include("discordlogin.urls"), name="discord-login"),
     path("logout", LogoutView.as_view(), name="logout-page"),
-    path("reset-all-bosses", reset_all_bosses, name="reset-page"),
     path("home", home_page, name="home-page"),
     path("profile", profile_page, name="profile-page"),
     path("events", events_page, name="events-page"),

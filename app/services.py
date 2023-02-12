@@ -1,8 +1,7 @@
 from django.http import HttpRequest
 from .models import Event, Boss, Item, Offer
-from discordlogin.models import DiscordUser, Moderator
+from discordlogin.models import DiscordUser, Moderator, CharacterServer
 import datetime
-from django.utils import timezone
 from environs import Env
 from .tasks import update_event_respawn
 
@@ -45,8 +44,8 @@ def create_new_event(request: HttpRequest) -> None:
     ).time()
     killed_at = datetime.datetime.combine(date, time)
     respawn = killed_at + datetime.timedelta(
-            minutes=Boss.objects.get(id=request.POST.get("event_boss")).respawn_time
-        )
+        minutes=Boss.objects.get(id=request.POST.get("event_boss")).respawn_time
+    )
     flag = True if request.POST.get("event_awakened") == "True" else False
     boss = Boss.objects.get(id=request.POST.get("event_boss"))
     server = request.user.character_server
@@ -60,7 +59,6 @@ def create_new_event(request: HttpRequest) -> None:
         server=server,
         creator=request.user.nickname,
         killed_at=killed_at,
-        closed_at=killed_at + datetime.timedelta(hours=2),
         respawn=respawn,
     )
     instance.save()
@@ -81,8 +79,10 @@ def create_new_event(request: HttpRequest) -> None:
         request.user.character_points += 20
     request.user.save()
     time_before = respawn - datetime.datetime.now()
-    minutes_before = int(time_before.total_seconds() // 60)
-    update_event_respawn.apply_async((boss.id, server.id), countdown=60*15 + minutes_before)
+    seconds_before = int(time_before.total_seconds())
+    update_event_respawn.apply_async(
+        (boss.id, server.id), countdown=60 * 5 + seconds_before
+    )
 
     # TODO webhook notification
     # embed = Embed(
@@ -94,16 +94,14 @@ def create_new_event(request: HttpRequest) -> None:
     # webhook.send(username="L2 CRM", content="Создано новое событие", embed=embed)
 
 
-def get_boss_list_to_display() -> list[Boss]:
+def get_boss_list_to_display(server: CharacterServer) -> list[Boss]:
     boss_list = []
-    now = timezone.now()
     bosses = Boss.objects.all()
     for boss in bosses:
-        event_boss = Event.objects.filter(boss=boss.id).order_by("-closed_at").first()
-        if event_boss:
-            if event_boss.closed_at < now and event_boss.respawn < now:
-                boss_list.append(boss)
-        else:
+        opened_event = Event.objects.filter(
+            boss=boss.id, respawn__gt=datetime.datetime.now(), server=server
+        ).first()
+        if not opened_event or opened_event == None:
             boss_list.append(boss)
     return boss_list
 
