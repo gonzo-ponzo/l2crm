@@ -2,11 +2,11 @@ from .models import Boss, Event
 from discordlogin.models import CharacterServer
 from l2crm.celery import app
 from django.utils import timezone
-from datetime import timedelta, datetime
+from datetime import timedelta
 
 
 @app.task
-def update_event_respawn(boss: int, server: int):
+def update_event_respawn(boss: int, server: int) -> bool:
     now = timezone.now()
     boss = Boss.objects.get(id=boss)
     server = CharacterServer.objects.get(id=server)
@@ -35,5 +35,12 @@ def update_event_respawn(boss: int, server: int):
         update_event_respawn.apply_async(
             (boss.id, server.id), countdown=60 * 15 + seconds_before
         )
-        return "%s True" % boss.name
+        return True
     return False
+
+
+@app.task
+def close_event(event: int):
+    event = Event.objects.get(id=event)
+    event.was_closed = True
+    event.save()

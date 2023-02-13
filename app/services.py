@@ -1,9 +1,9 @@
-from django.http import HttpRequest
-from .models import Event, Boss, Item, Offer
-from discordlogin.models import DiscordUser, Moderator, CharacterServer
 import datetime
 from environs import Env
-from .tasks import update_event_respawn
+from django.http import HttpRequest
+from discordlogin.models import DiscordUser, Moderator, CharacterServer
+from .models import Event, Boss, Item, Offer
+from .tasks import update_event_respawn, close_event
 
 
 env = Env()
@@ -83,6 +83,7 @@ def create_new_event(request: HttpRequest) -> None:
     update_event_respawn.apply_async(
         (boss.id, server.id), countdown=60 * 15 + seconds_before
     )
+    close_event.apply_async((instance.id,), countdown=60 * 60)
 
     # TODO webhook notification
     # embed = Embed(
