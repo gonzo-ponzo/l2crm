@@ -138,7 +138,7 @@
               <input  autoComplete="on" class="label ui dropdown" list="boots" name="boots" {% if inventory.boots %} value="{{ inventory.boots.name }}" {% endif %}/> 
             </div>
             <div class="profile-field">
-              <datalist id="">
+              <datalist id="cloack">
                 {% for item in cloacks_list %}
                   <option>{{ item.name }}</option>
                 {% endfor %}
