@@ -18,7 +18,7 @@ POSTGRES_PORT = env.str("POSTGRES_PORT")
 
 SECRET_KEY = env.str("SECRET_KEY")
 
-DEBUG = env.str("DEBUG")
+DEBUG = False
 
 ALLOWED_HOSTS = env.str("ALLOWED_HOSTS").split(" ")
 
