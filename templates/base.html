@@ -34,14 +34,14 @@
                 <li></li>
         </ul>
     </div> {% endcomment %}
-    <div class="body-container">
+    {% comment %} <div class="body-container"> {% endcomment %}
         {% include "header.html" %}
         <div class="container-content d-flex justify-content-center row">
             {% block content %}
             {% endblock %}
         </div>
         {% include "footer.html" %}    
-    </div>
+    {% comment %} </div> {% endcomment %}
 
 </body>
 </html>

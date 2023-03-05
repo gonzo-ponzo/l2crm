@@ -17,21 +17,21 @@ from .services import (
 class EventListView(ListView):
     model = Event
     template_name = "events_all.html"
-    paginate_by = 10
+    paginate_by = 8
 
     def get_queryset(self):
         queryset = Event.objects.filter(
             server=self.request.user.character_server,
             was_respawned=False,
             was_reseted=False,
-        ).all()
+        ).all()[:80]
         return queryset
 
 
 class RespawnListView(ListView):
     model = Event
     template_name = "respawns.html"
-    paginate_by = 10
+    paginate_by = 8
 
     def get_queryset(self):
         queryset = (
@@ -41,7 +41,7 @@ class RespawnListView(ListView):
             )
             .exclude(respawn=None)
             .order_by("respawn")
-            .all()
+            .all()[:80]
         )
         return queryset
 
@@ -118,14 +118,14 @@ def events_page(request: HttpRequest):
                 server=request.user.character_server,
                 was_respawned=False,
                 was_reseted=False,
-            ).all()[0:9],
+            ).all()[0:15],
             "respawn_list": Event.objects.filter(
                 respawn__gt=timezone.now(),
                 server=request.user.character_server,
             )
             .exclude(respawn=None)
             .order_by("respawn")
-            .all()[0:9],
+            .all()[0:15],
         },
     )
 

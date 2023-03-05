@@ -150,7 +150,7 @@ def home_page(request: HttpRequest):
             ),
             "event_list": Event.objects.filter(
                 players=user.id, server=user.character_server
-            ).all(),
+            ).all()[:15],
             "moderator_list": Moderator.objects.filter(player=user)
             .all()
             .order_by("-created_at")[:3],
@@ -264,7 +264,7 @@ class UserView(DetailView):
         )
         context["event_list"] = Event.objects.filter(
             players=user, server=user.character_server
-        ).all()
+        ).all()[:15]
         context["moderator_list"] = (
             Moderator.objects.filter(player=user).all().order_by("-created_at")[:3]
         )
