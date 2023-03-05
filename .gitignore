@@ -133,3 +133,4 @@ nginx/certs/l2crm.key
 nginx/nginx.conf
 data.json
 todo.txt
+database.json

@@ -81,9 +81,9 @@ def create_new_event(request: HttpRequest) -> None:
     time_before = respawn - datetime.datetime.now()
     seconds_before = int(time_before.total_seconds())
     update_event_respawn.apply_async(
-        (boss.id, server.id), countdown=60 * 60 + seconds_before
+        (boss.id, server.id), countdown=60 * 120 + seconds_before
     )
-    close_event.apply_async((instance.id,), countdown=60 * 60)
+    close_event.apply_async((instance.id,), countdown=60 * 120)
 
     # TODO webhook notification
     # embed = Embed(
