@@ -7,19 +7,12 @@
       <div class="col-lg-6">
         <div class="container-div">
           <h3 class="blue-text">
-            Информация
+            Информация о {{ object.nickname }}
           </h3>
           <div class="profile-data">
             {% if request.user.image %}
               <img src="{{ object.image.url }}" alt="" class="img-fluid rounded-circle profile-image">
             {% endif %}
-            <div class="profile-nickname">
-              <div class="stack" style="--stacks: 3;">
-                <span style="--index: 0;">{{ object.nickname }}</span>
-                <span style="--index: 1;">{{ object.nickname }}</span>
-                <span style="--index: 2;">{{ object.nickname }}</span>
-              </div>
-            </div>
             <p>
               <strong>Уровень:</strong> {{ object.character_level }}
             </p>

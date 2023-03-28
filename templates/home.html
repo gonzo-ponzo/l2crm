@@ -7,7 +7,7 @@
       <div class="col-lg-6">
         <div class="container-div">
           <h3 class="blue-text">
-            Информация
+            Информация о {{ request.user.nickname }}
           </h3>
           <div class="profile-data">
             {% if request.user.is_moderator %}
@@ -28,11 +28,6 @@
                       </button>
                     </div>
                 </form>
-                {% comment %} <a href="/reset-all-bosses" class="">
-                  <button class="button" type="submit">
-                    <i class="bi bi-arrow-clockwise"></i><strong>Обнуление</strong>
-                  </button>
-                </a> {% endcomment %}
               </div>
               <div class="button-moder">
                 <a href="/moderators" class="">
@@ -45,13 +40,6 @@
             {% if request.user.image %}
               <img src="{{ request.user.image.url }}" alt="" class="img-fluid rounded-circle profile-image">
             {% endif %}
-            <div class="profile-nickname">
-              <div class="stack" style="--stacks: 3;">
-                <span style="--index: 0;">{{ request.user.nickname }}</span>
-                <span style="--index: 1;">{{ request.user.nickname }}</span>
-                <span style="--index: 2;">{{ request.user.nickname }}</span>
-              </div>
-            </div>
             <p>
               <strong>Уровень:</strong> {{ request.user.character_level }}
             </p>

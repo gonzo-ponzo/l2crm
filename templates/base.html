@@ -19,29 +19,11 @@
 </head>
 
 <body>
-    {% comment %} ANIMATED CIRCLES {% endcomment %}
-    {% comment %} <div class="area" >
-        <ul class="circles">
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-        </ul>
-    </div> {% endcomment %}
-    {% comment %} <div class="body-container"> {% endcomment %}
         {% include "header.html" %}
         <div class="container-content d-flex justify-content-center row">
             {% block content %}
             {% endblock %}
         </div>
         {% include "footer.html" %}    
-    {% comment %} </div> {% endcomment %}
-
 </body>
 </html>
